@@ -42,5 +42,10 @@
 /* ===== PID SETPOINT ===== */
 #define PID_TARGET_TEMP_C            31.0
 
+/* ===== TELEGRAM ALERT ===== */
+#define TELEGRAM_BOT_TOKEN   "123456:ABCDEF"
+#define TELEGRAM_CHAT_ID    "123456789"
+
+
 
 #endif

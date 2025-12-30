@@ -3,8 +3,16 @@
 
 #include "Config.h"
 
+/* ===== HEATER STATE ===== */
 bool heaterState = false;
 
+/* ===== HEATER SAFETY TIMER ===== */
+unsigned long heaterOnStartTime = 0;
+
+/* Max continuous ON time: 45 minutes */
+#define HEATER_MAX_ON_TIME (45UL * 60UL * 1000UL)
+
+/* ===== RELAY SETUP ===== */
 void setupRelays() {
   pinMode(RELAY_HEATER_1_GPIO, OUTPUT);
   pinMode(RELAY_HEATER_2_GPIO, OUTPUT);
@@ -28,21 +36,6 @@ void heaterOFF() {
   digitalWrite(RELAY_HEATER_1_GPIO, HIGH);
   digitalWrite(RELAY_HEATER_2_GPIO, HIGH);
   heaterState = false;
-}
-
-void temperatureControl(float temp, bool sensorOK) {
-  if (!sensorOK) {
-    heaterOFF();
-    return;
-  }
-
-  if (!heaterState && temp < (TEMPERATURE_MIN_C - TEMPERATURE_HYSTERESIS_C)) {
-    heaterON();
-  }
-
-  if (heaterState && temp > (TEMPERATURE_MAX_C + TEMPERATURE_HYSTERESIS_C)) {
-    heaterOFF();
-  }
 }
 
 /* ===== MIST (SUMMER MODE) ===== */
