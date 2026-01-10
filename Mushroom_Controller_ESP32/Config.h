@@ -1,10 +1,20 @@
+
 #ifndef CONFIG_H
 #define CONFIG_H
 
+#define WEB_USERNAME "admin"
+#define WEB_PASSWORD "admin123"
+
+#define WEB_ADMIN_USER     "admin"
+#define WEB_ADMIN_PASS     "admin123"
+
+#define WEB_OPERATOR_USER  "operator"
+#define WEB_OPERATOR_PASS  "1234"
+
 /* ========== BLYNK IOT (MANDATORY) ========== */
-#define BLYNK_TEMPLATE_ID    "TMPLXXXXXX"   // from Blynk Console
-#define BLYNK_TEMPLATE_NAME  "Paddy Straw Mushroom Controller"
-#define BLYNK_AUTH_TOKEN     "YOUR_BLYNK_AUTH_TOKEN"
+#define BLYNK_TEMPLATE_ID "TMPL3dwHpndiO"
+#define BLYNK_TEMPLATE_NAME "Mushroom Farm Controller"
+#define BLYNK_AUTH_TOKEN "yNrD7eZw3Ejc5eIn7M4ZKBuA_fve2GLo"
 
 #define BLYNK_PRINT Serial
 
@@ -28,9 +38,11 @@
 #define VPIN_AVG_HUMIDITY             V2
 
 /* ===== MQTT ===== */
-#define MQTT_BROKER                   "broker.hivemq.com"
-#define MQTT_PORT                     1883
-#define MQTT_TOPIC                    "mushroom/farm/environment"
+#define MQTT_DEFAULT_BROKER     "broker.hivemq.com"
+#define MQTT_DEFAULT_PORT       1883
+#define MQTT_DEFAULT_BASE_TOPIC "mushroom"
+#define MQTT_CLIENTID "MushroomESP32"
+
 
 /* ===== SAFETY & CONTROL ===== */
 #define TEMPERATURE_HYSTERESIS_C     1.0
@@ -40,10 +52,10 @@
 #define SUMMER_HUMIDITY_LIMIT        85.0
 
 /* ===== PID SETPOINT ===== */
-#define PID_TARGET_TEMP_C            31.0
+//#define PID_TARGET_TEMP_C            31.0
 
 /* ===== TELEGRAM ALERT ===== */
-#define TELEGRAM_BOT_TOKEN   "123456:ABCDEF"
+#define TELEGRAM_BOT_TOKEN   "8356866552:AAEH_7BUZSyY0IahLF9C15-iUuSR47HMP0w"
 #define TELEGRAM_CHAT_ID    "123456789"
 
 

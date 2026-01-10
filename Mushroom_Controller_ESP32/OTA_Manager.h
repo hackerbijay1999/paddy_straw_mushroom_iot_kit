@@ -2,24 +2,29 @@
 #define OTA_MANAGER_H
 
 #include <ArduinoOTA.h>
+#include "Globals.h"
 
 void setupOTA() {
-  ArduinoOTA.setHostname("Mushroom_Controller");
+  ArduinoOTA.setHostname("mushroom-controller");
 
   ArduinoOTA.onStart([]() {
-    Serial.println("OTA Update Started");
+    emergencyStop = true;
+    allRelaysOFF();
+    Serial.println("🛠 OTA Started");
   });
 
   ArduinoOTA.onEnd([]() {
-    Serial.println("OTA Update Finished");
+    Serial.println("✅ OTA Finished");
+    emergencyStop = false;
   });
 
   ArduinoOTA.onError([](ota_error_t error) {
-    Serial.printf("OTA Error[%u]\n", error);
+    Serial.printf("❌ OTA Error[%u]\n", error);
+    emergencyStop = false;
   });
 
   ArduinoOTA.begin();
-  Serial.println("OTA Ready");
+  Serial.println("📡 OTA Ready");
 }
 
 void handleOTA() {

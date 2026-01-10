@@ -3,61 +3,43 @@
 
 #include "Config.h"
 
-/* ===== HEATER STATE ===== */
-bool heaterState = false;
+/* ===== EXTERNALS ===== */
+extern bool relayEnabled[4];
 
-/* ===== HEATER SAFETY TIMER ===== */
-unsigned long heaterOnStartTime = 0;
+/* ===== FORWARD DECL ===== */
+void saveRelayStates();   // from Storage_Manager
 
-/* Max continuous ON time: 45 minutes */
-#define HEATER_MAX_ON_TIME (45UL * 60UL * 1000UL)
+/* ===== RELAY GPIO MAP ===== */
+uint8_t relayPins[4] = {
+  RELAY_HEATER_1_GPIO,
+  RELAY_HEATER_2_GPIO,
+  RELAY_MIST_1_GPIO,
+  RELAY_MIST_2_GPIO
+};
 
-/* ===== RELAY SETUP ===== */
+/* ===== SETUP ===== */
 void setupRelays() {
-  pinMode(RELAY_HEATER_1_GPIO, OUTPUT);
-  pinMode(RELAY_HEATER_2_GPIO, OUTPUT);
-  pinMode(RELAY_MIST_1_GPIO, OUTPUT);
-  pinMode(RELAY_MIST_2_GPIO, OUTPUT);
-
-  digitalWrite(RELAY_HEATER_1_GPIO, HIGH);
-  digitalWrite(RELAY_HEATER_2_GPIO, HIGH);
-  digitalWrite(RELAY_MIST_1_GPIO, HIGH);
-  digitalWrite(RELAY_MIST_2_GPIO, HIGH);
-}
-
-/* ===== HEATER ===== */
-void heaterON() {
-  digitalWrite(RELAY_HEATER_1_GPIO, LOW);
-  digitalWrite(RELAY_HEATER_2_GPIO, LOW);
-  heaterState = true;
-}
-
-void heaterOFF() {
-  digitalWrite(RELAY_HEATER_1_GPIO, HIGH);
-  digitalWrite(RELAY_HEATER_2_GPIO, HIGH);
-  heaterState = false;
-}
-
-/* ===== MIST (SUMMER MODE) ===== */
-void mistON() {
-  digitalWrite(RELAY_MIST_1_GPIO, LOW);
-}
-
-void mistOFF() {
-  digitalWrite(RELAY_MIST_1_GPIO, HIGH);
-}
-
-void summerMistControl(float temp, float hum, bool sensorOK) {
-  if (!sensorOK) {
-    mistOFF();
-    return;
+  for (int i = 0; i < 4; i++) {
+    pinMode(relayPins[i], OUTPUT);
+    digitalWrite(relayPins[i], HIGH); // OFF default
   }
+}
 
-  if (temp > SUMMER_TEMP_LIMIT_C || hum < SUMMER_HUMIDITY_LIMIT) {
-    mistON();
-  } else {
-    mistOFF();
+/* ===== CONTROL ===== */
+void setRelay(uint8_t ch, bool state) {
+  if (ch > 3) return;
+  if (!relayEnabled[ch]) return;
+
+  digitalWrite(relayPins[ch], state ? LOW : HIGH);
+  saveRelayStates();   // persist only
+}
+
+/* ===== ALL OFF ===== */
+void allRelaysOFF() {
+  for (int i = 0; i < 4; i++) {
+    digitalWrite(relayPins[i], HIGH);
   }
+  saveRelayStates();
 }
 
 #endif
